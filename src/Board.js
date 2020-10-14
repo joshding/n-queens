@@ -61,8 +61,7 @@
       );
     },
 
-
-/*
+    /*
          _             _     _
      ___| |_ __ _ _ __| |_  | |__   ___ _ __ ___ _
     / __| __/ _` | '__| __| | '_ \ / _ \ '__/ _ (_)
@@ -78,13 +77,36 @@
     // --------------------------------------------------------------
     //
     // test if a specific row on this board contains a conflict
+    // input: number representing row index
     hasRowConflictAt: function(rowIndex) {
-      return false; // fixme
+      // Get all rows in the board
+      var allBoardRows = this.rows();
+      //
+      var rowCheck = allBoardRows[rowIndex];
+      // count the queens
+      var count = 0;
+      for (var i = 0; i < rowCheck.length; i++) {
+        count += rowCheck[i];
+      }
+      if (count > 1) {
+        return true;
+      }
+      return false;
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      // Get number of rows in the board
+      var totalRows = this.rows().length;
+      // iterate over totalRows
+      for (var i = 0; i < totalRows; i++) {
+      // if hasRowConflictAt is true for any row
+        if (this.hasRowConflictAt(i) === true) {
+          // return true
+          return true;
+        }
+      }
+      return false;
     },
 
 
@@ -93,13 +115,40 @@
     // --------------------------------------------------------------
     //
     // test if a specific column on this board contains a conflict
+    // input: number representing column index
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      // Get all board rows using row method
+      var allBoardRows = this.rows();
+      // Iterate through row and pull values from colIndex in each row
+      // output an array of single column values
+      var arrayOfColValues = _.pluck(allBoardRows, colIndex);
+      //console.log(arrayOfColValues);
+      // count the queens
+      var count = 0;
+      // iterate through array of single column values
+      for (var i = 0; i < arrayOfColValues.length; i++) {
+        // if element is equal to 1
+        count += arrayOfColValues[i];
+      }
+      if (count > 1) {
+        return true;
+      }
+      return false;
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      // find board length
+      var totalColumns = this.rows().length;
+      // iterate over length of board
+      for (var i = 0; i < totalColumns; i++) {
+        // if any columns hasColConflictAt is equal to true
+        if (this.hasColConflictAt(i) === true) {
+          // return true
+          return true;
+        }
+      }
+      return false;
     },
 
 
