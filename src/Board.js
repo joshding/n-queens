@@ -2,7 +2,7 @@
 // It's part of the Board Visualizer
 // The only portions you need to work on are the helper functions (below)
 
-(function() {
+(function () {
 
   window.Board = Backbone.Model.extend({
 
@@ -18,30 +18,30 @@
       }
     },
 
-    rows: function() {
-      return _(_.range(this.get('n'))).map(function(rowIndex) {
+    rows: function () {
+      return _(_.range(this.get('n'))).map(function (rowIndex) {
         return this.get(rowIndex);
       }, this);
     },
 
-    togglePiece: function(rowIndex, colIndex) {
+    togglePiece: function (rowIndex, colIndex) {
       this.get(rowIndex)[colIndex] = + !this.get(rowIndex)[colIndex];
       this.trigger('change');
     },
 
-    _getFirstRowColumnIndexForMajorDiagonalOn: function(rowIndex, colIndex) {
+    _getFirstRowColumnIndexForMajorDiagonalOn: function (rowIndex, colIndex) {
       return colIndex - rowIndex;
     },
 
-    _getFirstRowColumnIndexForMinorDiagonalOn: function(rowIndex, colIndex) {
+    _getFirstRowColumnIndexForMinorDiagonalOn: function (rowIndex, colIndex) {
       return colIndex + rowIndex;
     },
 
-    hasAnyRooksConflicts: function() {
+    hasAnyRooksConflicts: function () {
       return this.hasAnyRowConflicts() || this.hasAnyColConflicts();
     },
 
-    hasAnyQueenConflictsOn: function(rowIndex, colIndex) {
+    hasAnyQueenConflictsOn: function (rowIndex, colIndex) {
       return (
         this.hasRowConflictAt(rowIndex) ||
         this.hasColConflictAt(colIndex) ||
@@ -50,11 +50,11 @@
       );
     },
 
-    hasAnyQueensConflicts: function() {
+    hasAnyQueensConflicts: function () {
       return this.hasAnyRooksConflicts() || this.hasAnyMajorDiagonalConflicts() || this.hasAnyMinorDiagonalConflicts();
     },
 
-    _isInBounds: function(rowIndex, colIndex) {
+    _isInBounds: function (rowIndex, colIndex) {
       return (
         0 <= rowIndex && rowIndex < this.get('n') &&
         0 <= colIndex && colIndex < this.get('n')
@@ -78,7 +78,7 @@
     //
     // test if a specific row on this board contains a conflict
     // input: number representing row index
-    hasRowConflictAt: function(rowIndex) {
+    hasRowConflictAt: function (rowIndex) {
       // Get all rows in the board
       var allBoardRows = this.rows();
       //
@@ -95,12 +95,12 @@
     },
 
     // test if any rows on this board contain conflicts
-    hasAnyRowConflicts: function() {
+    hasAnyRowConflicts: function () {
       // Get number of rows in the board
       var totalRows = this.rows().length;
       // iterate over totalRows
       for (var i = 0; i < totalRows; i++) {
-      // if hasRowConflictAt is true for any row
+        // if hasRowConflictAt is true for any row
         if (this.hasRowConflictAt(i) === true) {
           // return true
           return true;
@@ -116,7 +116,7 @@
     //
     // test if a specific column on this board contains a conflict
     // input: number representing column index
-    hasColConflictAt: function(colIndex) {
+    hasColConflictAt: function (colIndex) {
       // Get all board rows using row method
       var allBoardRows = this.rows();
       // Iterate through row and pull values from colIndex in each row
@@ -137,7 +137,7 @@
     },
 
     // test if any columns on this board contain conflicts
-    hasAnyColConflicts: function() {
+    hasAnyColConflicts: function () {
       // find board length
       var totalColumns = this.rows().length;
       // iterate over length of board
@@ -156,14 +156,89 @@
     // Major Diagonals - go from top-left to bottom-right
     // --------------------------------------------------------------
     //
-    // test if a specific major diagonal on this board contains a conflict
-    hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+    // test if a specific major
+
+    /*
+    Prompt: count number of queens in major diagonal
+    IOCE: Input: number Output: boolean CE: n/a
+    Strategy:
+    count how many queens in that major diagonal.
+
+    get the length of the rows using row method on the board class.
+
+    determine if inputted column index is a negative number. Then we will need to start at the row index associated to the negative column input.
+    keep column index at 0.
+
+    if column number is positive, start row at 0 index. With column index as inputted column.
+
+    iterate over start row, whether it is at the 0 index, or starting at a lower row.
+
+     If there is a queen, add to count.
+
+    at row 0 at column 0, is there a queen? if yes, add to count. Otherwise, adjust our indexes so that now we're at row 1 and column 1. check if there's a queen. If there is one, add to count.
+    if count is more than 1, return true, otherwise false.
+
+    Visualize:
+    Pseudocode:
+    verify:
+    Code
+    */
+    hasMajorDiagonalConflictAt: function (majorDiagonalColumnIndexAtFirstRow) {
+
+      // // Count number of rows in current instance of board. Using board row method.
+      var rowCount = this.rows().length;
+      // create variable row start index with value 0
+      var rowStartIndex = 0;
+      // create variable column start index and equal to input.
+      var columnStartIndex = majorDiagonalColumnIndexAtFirstRow;
+      // //if input is negative
+      if (columnStartIndex < 0) {
+        //   start row index + input * -1
+        rowStartIndex += columnStartIndex * -1;
+        //   set start column index to 0.
+        columnStartIndex = 0;
+      }
+
+      // // create count variable
+      var count = 0;
+      //the while loop for number of rows available.
+      //  while(startColumn < row.length )
+      while (columnStartIndex < rowCount && rowStartIndex < rowCount) {
+        // Check at startRow, startColumn if there is a queen. If there is a queen, add to count. Then change startRow and startColumn by adding +1.
+        var startRow = this.rows()[rowStartIndex];
+        console.log(startRow);
+        if (startRow[columnStartIndex] === 1) {
+          count++;
+        }
+        if (count > 1) {
+          return true;
+        }
+        rowStartIndex++;
+        columnStartIndex++;
+      }
+
+      return false;
     },
 
     // test if any major diagonals on this board contain conflicts
-    hasAnyMajorDiagonalConflicts: function() {
-      return false; // fixme
+    hasAnyMajorDiagonalConflicts: function () {
+
+      // determine the number of rows.
+      var totalRows = this.rows().length;
+      // lowest column input is (number of rows - 1) * -1
+      var lowestColumn = (totalRows - 1) * -1;
+      // highest column input is number of rows.
+      var highestColumn = totalRows;
+      console.log(highestColumn);
+      // then, we can do a forloop where var i is equal to lowest column input while i is less than or equal to highest column input. Increment i by 1.
+      for (var i = lowestColumn; i < highestColumn; i++ ) {
+        if (this.hasMajorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      // For each iteration if hasMajorDiagonalConflictAt(i) , return true.
+
+      return false;
     },
 
 
@@ -172,13 +247,64 @@
     // --------------------------------------------------------------
     //
     // test if a specific minor diagonal on this board contains a conflict
-    hasMinorDiagonalConflictAt: function(minorDiagonalColumnIndexAtFirstRow) {
-      return false; // fixme
+
+    // input: number
+    // output: boolean
+    // edge: none
+    // Strategy:
+    /* Check if the input is greater than length of the rows - 1
+      if input is greater, adjust the row index  by the input - (row lengths - 1)
+        starting column index will be the row length - 1
+      Otherwise the starting row index will be 0 be equal to the input
+      create count variable
+      while indexes we have are in bounds
+        if the current element is 1, count++
+        increment the row index up and the column index down
+      return if count > 1
+    */
+
+    hasMinorDiagonalConflictAt: function (minorDiagonalColumnIndexAtFirstRow) {
+      var lastIndex = this.rows().length - 1;
+      var row = 0;
+      var column = 0;
+      // Check if the input is greater than length of the rows - 1
+      if (minorDiagonalColumnIndexAtFirstRow > lastIndex) {
+        // if input is greater, adjust the row index  by the input - (row length - 1)
+        row = minorDiagonalColumnIndexAtFirstRow - lastIndex;
+        // starting column index will be the row length - 1
+        column = lastIndex;
+        // Otherwise the starting row index will be 0, column will be equal to the input
+      } else {
+        column = minorDiagonalColumnIndexAtFirstRow;
+      }
+      // create count variable
+      var count = 0;
+      //while indexs we have are in bounds
+      while (this._isInBounds(row, column)) {
+      //   if the current element is 1, count++
+        if (this.get(row)[column] === 1) {
+          count++;
+        }
+        // increment the row index up and the column index down
+        row++;
+        column--;
+
+      }
+      // return if count > 1
+      return count > 1;
+
     },
 
     // test if any minor diagonals on this board contain conflicts
-    hasAnyMinorDiagonalConflicts: function() {
-      return false; // fixme
+    hasAnyMinorDiagonalConflicts: function () {
+      var length = this.rows().length;
+      var max = length + length - 1;
+      for (var i = 0; i < max; i++) {
+        if (this.hasMinorDiagonalConflictAt(i)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     /*--------------------  End of Helper Functions  ---------------------*/
@@ -186,9 +312,9 @@
 
   });
 
-  var makeEmptyMatrix = function(n) {
-    return _(_.range(n)).map(function() {
-      return _(_.range(n)).map(function() {
+  var makeEmptyMatrix = function (n) {
+    return _(_.range(n)).map(function () {
+      return _(_.range(n)).map(function () {
         return 0;
       });
     });
