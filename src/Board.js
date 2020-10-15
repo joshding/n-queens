@@ -78,8 +78,13 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function (rowIndex) {
+
       var allBoardRows = this.rows();
+
       var rowCheck = allBoardRows[rowIndex];
+      if (rowCheck === undefined) {
+        debugger;
+      }
       var count = 0;
       for (var i = 0; i < rowCheck.length; i++) {
         count += rowCheck[i];
@@ -147,7 +152,6 @@
       var count = 0;
       while (columnStartIndex < rowCount && rowStartIndex < rowCount) {
         var startRow = this.rows()[rowStartIndex];
-        console.log(startRow);
         if (startRow[columnStartIndex] === 1) {
           count++;
         }
